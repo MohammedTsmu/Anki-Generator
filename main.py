@@ -6,6 +6,8 @@ from modules.flashcards import FlashcardsProcessor
 from modules.mcqs import MCQsProcessor
 from modules.vocabulary import VocabularyProcessor
 from modules.definitions import DefinitionsProcessor
+from modules.cloze import ClozeProcessor  # Add this line
+
 
 class AnkiGeneratorApp:
     def __init__(self, root):
@@ -42,6 +44,13 @@ class AnkiGeneratorApp:
         tk.Button(root, text="Upload Definitions File", command=self.upload_definitions_file).pack(pady=5)
         tk.Button(root, text="Generate Definitions .apkg", command=self.generate_definitions).pack(pady=5)
         tk.Button(root, text="Merge Definitions Files", command=self.merge_definitions_files).pack(pady=5)
+        
+        # Cloze Section
+        tk.Label(root, text="Cloze Notes").pack(pady=10)
+        tk.Button(root, text="Upload Cloze File", command=self.upload_cloze_file).pack(pady=5)
+        tk.Button(root, text="Generate Cloze .apkg", command=self.generate_cloze).pack(pady=5)
+        tk.Button(root, text="Merge Cloze Files", command=self.merge_cloze_files).pack(pady=5)
+
 
     def get_unique_file_path(self, folder_name, base_name):
         folder_path = os.path.join(self.base_output_dir, folder_name)
@@ -185,6 +194,43 @@ class AnkiGeneratorApp:
         processor.generate_apkg(output_path)
 
         messagebox.showinfo("Success", f"Merged Definitions .apkg generated at: {output_path}")
+        
+    def upload_cloze_file(self):
+        self.file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
+        if self.file_path:
+            messagebox.showinfo("File Uploaded", f"File successfully uploaded: {self.file_path}")
+
+    def generate_cloze(self):
+        if not self.file_path:
+            messagebox.showerror("Error", "Please upload a Cloze file first.")
+            return
+        processor = ClozeProcessor(self.file_path)
+        processor.parse_file()
+        output_path = self.get_unique_file_path("Cloze", "cloze")
+        processor.generate_apkg(output_path)
+        messagebox.showinfo("Success", f"Cloze .apkg generated at: {output_path}")
+        
+    def merge_cloze_files(self):
+        file_paths = filedialog.askopenfilenames(filetypes=[("Text Files", "*.txt")])
+        if not file_paths:
+            messagebox.showerror("Error", "No files selected for merging.")
+            return
+
+        merged_cloze_notes = []
+        for file_path in file_paths:
+            processor = ClozeProcessor(file_path)
+            processor.parse_file()
+            merged_cloze_notes.extend(processor.cloze_notes)
+
+        # Ensure we use the ClozeProcessor for creating the merged file
+        processor = ClozeProcessor("")  # Dummy file path, as we only use the `generate_apkg` method
+        processor.cloze_notes = merged_cloze_notes
+
+        output_path = self.get_unique_file_path("Cloze", "merged_cloze")
+        processor.generate_apkg(output_path)
+
+        messagebox.showinfo("Success", f"Merged Cloze .apkg generated at: {output_path}")
+    
 
 if __name__ == "__main__":
     root = tk.Tk()

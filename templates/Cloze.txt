@@ -1,0 +1,25 @@
+Generate Cloze-style notes in the following strict format for Anki flashcards. Each note should consist of a sentence where a specific word or phrase is hidden using double curly braces (e.g., {{c1::word}}). The answer must be explicitly provided below the sentence. Use the format below:
+
+Cloze: [A sentence where a word or phrase will be hidden.]
+Answer: [The exact word or phrase hidden in the sentence.]
+
+Strict Format:
+1. Each note must start with "Cloze:" followed by a sentence.
+2. Use double curly braces and `c1` to indicate the hidden word/phrase (e.g., {{c1::word}}).
+3. The answer must begin with "Answer:" and specify the hidden word/phrase.
+4. All notes must follow a plain-text format compatible with your Anki generation app.
+
+Example Notes:
+Cloze: The {{c1::heart}} pumps blood throughout the body.
+Answer: heart
+
+Cloze: Photosynthesis occurs in the {{c1::chloroplasts}} of plant cells.
+Answer: chloroplasts
+
+Cloze: The {{c1::mitochondria}} are known as the powerhouse of the cell.
+Answer: mitochondria
+
+Cloze: Water freezes at {{c1::0 degrees Celsius}}.
+Answer: 0 degrees Celsius
+
+Generate [X] Cloze notes on the topic: "[Your topic here]".
