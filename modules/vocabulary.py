@@ -21,7 +21,7 @@ class VocabularyProcessor:
     def generate_apkg(self, output_path):
         model = genanki.Model(
             1607392321,
-            'Vocabulary Model',
+            'Dr.Mohammed_Vocabulary',
             fields=[
                 {'name': 'Term'},
                 {'name': 'Translation'},
@@ -78,7 +78,7 @@ class VocabularyProcessor:
             ''',
         )
 
-        deck = genanki.Deck(2059400130, 'Vocabulary Deck')
+        deck = genanki.Deck(2059400130, 'Dr.Mohammed_Vocabulary Deck')
         for term, translation in self.vocabulary:
             note = genanki.Note(
                 model=model,

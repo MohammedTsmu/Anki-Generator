@@ -29,7 +29,7 @@ class MCQsProcessor:
     def generate_apkg(self, output_path):
         model = genanki.Model(
             1607392320,
-            'MCQs Model',
+            'Dr.Mohammed_MCQs',
             fields=[
                 {'name': 'Question'},
                 {'name': 'Options'},
@@ -96,7 +96,7 @@ class MCQsProcessor:
             ''',
         )
 
-        deck = genanki.Deck(2059400120, 'MCQs Deck')
+        deck = genanki.Deck(2059400120, 'Dr.Mohammed_MCQs Deck')
         for question, options, correct_option in self.mcqs:
             options_formatted = "<br>".join([f"{key}) {value}" for key, value in options.items()])
             note = genanki.Note(

@@ -47,7 +47,7 @@ class AnkiGeneratorApp:
         folder_path = os.path.join(self.base_output_dir, folder_name)
         os.makedirs(folder_path, exist_ok=True)
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        file_name = f"{base_name}_{timestamp}.apkg"
+        file_name = f"Dr.Mohammed_{base_name}_{timestamp}.apkg"
         return os.path.join(folder_path, file_name)
 
     # Flashcards Methods

@@ -21,7 +21,7 @@ class FlashcardsProcessor:
     def generate_apkg(self, output_path):
         model = genanki.Model(
             1607392319,
-            'Flashcards Model',
+            'Dr.Mohammed_Flashcards',
             fields=[
                 {'name': 'Question'},
                 {'name': 'Answer'},
@@ -79,7 +79,7 @@ class FlashcardsProcessor:
             ''',
         )
 
-        deck = genanki.Deck(2059400110, 'Flashcards Deck')
+        deck = genanki.Deck(2059400110, 'Dr.Mohammed_Flashcards Deck')
         for question, answer in self.flashcards:
             note = genanki.Note(
                 model=model,

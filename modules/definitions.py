@@ -21,7 +21,7 @@ class DefinitionsProcessor:
     def generate_apkg(self, output_path):
         model = genanki.Model(
             1607392322,
-            'Definitions Model',
+            'Dr.Mohammed_Definitions',
             fields=[
                 {'name': 'Term'},
                 {'name': 'Definition'},
@@ -81,7 +81,7 @@ class DefinitionsProcessor:
             ''',
         )
 
-        deck = genanki.Deck(2059400140, 'Definitions Deck')
+        deck = genanki.Deck(2059400140, 'Dr.Mohammed_Definitions Deck')
         for term, definition in self.definitions:
             note = genanki.Note(
                 model=model,
