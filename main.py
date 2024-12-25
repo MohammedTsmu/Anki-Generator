@@ -14,7 +14,7 @@ class AnkiGeneratorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Anki Generator App")
-        self.root.geometry("600x750")  # Increased dimensions for better layout
+        self.root.geometry("650x750")  # Increased dimensions for better layout
         self.root.resizable(True, True)
 
         self.base_output_dir = "output/generated_files"
@@ -79,7 +79,7 @@ class AnkiGeneratorApp:
         prompt_window = tk.Toplevel(self.root)
         prompt_window.title("View Prompt")
         # prompt_window.geometry("500x500")
-        prompt_window.geometry("600x600")
+        prompt_window.geometry("650x600")
         prompt_window.resizable(False, False)
 
         # Add a text widget to display the prompt
