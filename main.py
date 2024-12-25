@@ -2,54 +2,89 @@ import os
 import time
 import tkinter as tk
 from tkinter import filedialog, messagebox
+from tkinter import ttk  # For styled widgets
 from modules.flashcards import FlashcardsProcessor
 from modules.mcqs import MCQsProcessor
 from modules.vocabulary import VocabularyProcessor
 from modules.definitions import DefinitionsProcessor
-from modules.cloze import ClozeProcessor  # Add this line
+from modules.cloze import ClozeProcessor
 
 
 class AnkiGeneratorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Anki Generator App")
-        self.root.geometry("500x600")  # Increased height to fit new features
-        
+        self.root.geometry("600x700")  # Increased dimensions for better layout
+        self.root.resizable(True, True)
+
         self.base_output_dir = "output/generated_files"
         os.makedirs(self.base_output_dir, exist_ok=True)
 
-        self.create_sections()
+        self.create_styles()  # Initialize styles
+        self.create_main_layout()  # Build the main UI layout
 
-    def create_sections(self):
-        # Flashcards Section
-        tk.Label(root, text="Flashcards").pack(pady=10)
-        tk.Button(root, text="Upload Flashcards File", command=self.upload_flashcards_file).pack(pady=5)
-        tk.Button(root, text="Generate Flashcards .apkg", command=self.generate_flashcards).pack(pady=5)
-        tk.Button(root, text="Merge Flashcards Files", command=self.merge_flashcards_files).pack(pady=5)
+    # def create_styles(self):
+    #     """Create styles for widgets."""
+    #     self.style = ttk.Style()
+    #     self.style.configure("TFrame", background="#2e2e2e")  # Dark gray background
+    #     self.style.configure("TLabel", background="#2e2e2e", foreground="#ffffff", font=("Arial", 12))
+    #     self.style.configure("TButton", background="#444444", foreground="#ffffff", font=("Arial", 10))
+    #     self.style.map("TButton", background=[("active", "#5e5e5e")], foreground=[("active", "#ffffff")])
+    def create_styles(self):
+        """Create styles for widgets."""
+        self.style = ttk.Style()
+        self.style.configure("TFrame", background="#3a3a3a")  # Slightly lighter gray background
+        self.style.configure("TLabel", background="#3a3a3a", foreground="#ffffff", font=("Arial", 14, "bold"))
+        self.style.configure(
+            "TButton",
+            background="#444444",
+            foreground="#000000",
+            font=("Arial", 12),
+            padding=6,
+            relief="flat",
+        )
+        self.style.map("TButton", background=[("active", "#5e5e5e")], foreground=[("active", "green")])
 
-        # MCQs Section
-        tk.Label(root, text="MCQs").pack(pady=10)
-        tk.Button(root, text="Upload MCQs File", command=self.upload_mcqs_file).pack(pady=5)
-        tk.Button(root, text="Generate MCQs .apkg", command=self.generate_mcqs).pack(pady=5)
-        tk.Button(root, text="Merge MCQs Files", command=self.merge_mcqs_files).pack(pady=5)
 
-        # Vocabulary Section
-        tk.Label(root, text="Vocabulary").pack(pady=10)
-        tk.Button(root, text="Upload Vocabulary File", command=self.upload_vocabulary_file).pack(pady=5)
-        tk.Button(root, text="Generate Vocabulary .apkg", command=self.generate_vocabulary).pack(pady=5)
-        tk.Button(root, text="Merge Vocabulary Files", command=self.merge_vocabulary_files).pack(pady=5)
+    def create_main_layout(self):
+        """Create the main layout with sections."""
+        # Create a main frame
+        main_frame = ttk.Frame(self.root, padding=20)
+        main_frame.pack(fill="both", expand=True)
 
-        # Definitions Section
-        tk.Label(root, text="Definitions").pack(pady=10)
-        tk.Button(root, text="Upload Definitions File", command=self.upload_definitions_file).pack(pady=5)
-        tk.Button(root, text="Generate Definitions .apkg", command=self.generate_definitions).pack(pady=5)
-        tk.Button(root, text="Merge Definitions Files", command=self.merge_definitions_files).pack(pady=5)
-        
-        # Cloze Section
-        tk.Label(root, text="Cloze Notes").pack(pady=10)
-        tk.Button(root, text="Upload Cloze File", command=self.upload_cloze_file).pack(pady=5)
-        tk.Button(root, text="Generate Cloze .apkg", command=self.generate_cloze).pack(pady=5)
-        tk.Button(root, text="Merge Cloze Files", command=self.merge_cloze_files).pack(pady=5)
+        # Add sections
+        self.add_section(main_frame, "Flashcards", self.upload_flashcards_file, self.generate_flashcards, self.merge_flashcards_files)
+        self.add_section(main_frame, "MCQs", self.upload_mcqs_file, self.generate_mcqs, self.merge_mcqs_files)
+        self.add_section(main_frame, "Vocabulary", self.upload_vocabulary_file, self.generate_vocabulary, self.merge_vocabulary_files)
+        self.add_section(main_frame, "Definitions", self.upload_definitions_file, self.generate_definitions, self.merge_definitions_files)
+        self.add_section(main_frame, "Cloze Notes", self.upload_cloze_file, self.generate_cloze, self.merge_cloze_files)
+
+    # def add_section(self, parent, section_title, upload_cmd, generate_cmd, merge_cmd):
+    #     """Add a section with upload, generate, and merge buttons."""
+    #     frame = ttk.Frame(parent, padding=10)
+    #     frame.pack(fill="x", pady=10)
+
+    #     ttk.Label(frame, text=section_title, font=("Arial", 14, "bold")).pack(anchor="w", pady=5)
+
+    #     button_frame = ttk.Frame(frame)
+    #     button_frame.pack(fill="x", padx=10, pady=5)
+
+    #     ttk.Button(button_frame, text="Upload File", command=upload_cmd).pack(side="left", padx=5)
+    #     ttk.Button(button_frame, text="Generate .apkg", command=generate_cmd).pack(side="left", padx=5)
+    #     ttk.Button(button_frame, text="Merge Files", command=merge_cmd).pack(side="left", padx=5)
+    def add_section(self, parent, section_title, upload_cmd, generate_cmd, merge_cmd):
+        """Add a section with upload, generate, and merge buttons."""
+        frame = ttk.Frame(parent, padding=10)
+        frame.pack(fill="x", pady=15)  # More padding for spacing
+
+        ttk.Label(frame, text=section_title, font=("Arial", 16, "bold")).pack(anchor="w", pady=5)
+
+        button_frame = ttk.Frame(frame)
+        button_frame.pack(fill="x", padx=10, pady=5)
+
+        ttk.Button(button_frame, text="Upload File", command=upload_cmd).pack(side="left", padx=10)
+        ttk.Button(button_frame, text="Generate .apkg", command=generate_cmd).pack(side="left", padx=10)
+        ttk.Button(button_frame, text="Merge Files", command=merge_cmd).pack(side="left", padx=10)
 
 
     def get_unique_file_path(self, folder_name, base_name):
@@ -76,22 +111,7 @@ class AnkiGeneratorApp:
         messagebox.showinfo("Success", f"Flashcards .apkg generated at: {output_path}")
 
     def merge_flashcards_files(self):
-        file_paths = filedialog.askopenfilenames(filetypes=[("Text Files", "*.txt")])
-        if not file_paths:
-            messagebox.showerror("Error", "No files selected for merging.")
-            return
-
-        merged_flashcards = []
-        for file_path in file_paths:
-            processor = FlashcardsProcessor(file_path)
-            processor.parse_file()
-            merged_flashcards.extend(processor.flashcards)
-
-        output_path = self.get_unique_file_path("Flashcards", "merged_flashcards")
-        processor.flashcards = merged_flashcards
-        processor.generate_apkg(output_path)
-
-        messagebox.showinfo("Success", f"Merged Flashcards .apkg generated at: {output_path}")
+        self.merge_files("Flashcards", FlashcardsProcessor, "flashcards")
 
     # MCQs Methods
     def upload_mcqs_file(self):
@@ -110,22 +130,7 @@ class AnkiGeneratorApp:
         messagebox.showinfo("Success", f"MCQs .apkg generated at: {output_path}")
 
     def merge_mcqs_files(self):
-        file_paths = filedialog.askopenfilenames(filetypes=[("Text Files", "*.txt")])
-        if not file_paths:
-            messagebox.showerror("Error", "No files selected for merging.")
-            return
-
-        merged_mcqs = []
-        for file_path in file_paths:
-            processor = MCQsProcessor(file_path)
-            processor.parse_file()
-            merged_mcqs.extend(processor.mcqs)
-
-        output_path = self.get_unique_file_path("MCQs", "merged_mcqs")
-        processor.mcqs = merged_mcqs
-        processor.generate_apkg(output_path)
-
-        messagebox.showinfo("Success", f"Merged MCQs .apkg generated at: {output_path}")
+        self.merge_files("MCQs", MCQsProcessor, "mcqs")
 
     # Vocabulary Methods
     def upload_vocabulary_file(self):
@@ -144,22 +149,7 @@ class AnkiGeneratorApp:
         messagebox.showinfo("Success", f"Vocabulary .apkg generated at: {output_path}")
 
     def merge_vocabulary_files(self):
-        file_paths = filedialog.askopenfilenames(filetypes=[("Text Files", "*.txt")])
-        if not file_paths:
-            messagebox.showerror("Error", "No files selected for merging.")
-            return
-
-        merged_vocab = []
-        for file_path in file_paths:
-            processor = VocabularyProcessor(file_path)
-            processor.parse_file()
-            merged_vocab.extend(processor.vocabulary)
-
-        output_path = self.get_unique_file_path("Vocabulary", "merged_vocabulary")
-        processor.vocabulary = merged_vocab
-        processor.generate_apkg(output_path)
-
-        messagebox.showinfo("Success", f"Merged Vocabulary .apkg generated at: {output_path}")
+        self.merge_files("Vocabulary", VocabularyProcessor, "vocabulary")
 
     # Definitions Methods
     def upload_definitions_file(self):
@@ -178,23 +168,9 @@ class AnkiGeneratorApp:
         messagebox.showinfo("Success", f"Definitions .apkg generated at: {output_path}")
 
     def merge_definitions_files(self):
-        file_paths = filedialog.askopenfilenames(filetypes=[("Text Files", "*.txt")])
-        if not file_paths:
-            messagebox.showerror("Error", "No files selected for merging.")
-            return
+        self.merge_files("Definitions", DefinitionsProcessor, "definitions")
 
-        merged_definitions = []
-        for file_path in file_paths:
-            processor = DefinitionsProcessor(file_path)
-            processor.parse_file()
-            merged_definitions.extend(processor.definitions)
-
-        output_path = self.get_unique_file_path("Definitions", "merged_definitions")
-        processor.definitions = merged_definitions
-        processor.generate_apkg(output_path)
-
-        messagebox.showinfo("Success", f"Merged Definitions .apkg generated at: {output_path}")
-        
+    # Cloze Methods
     def upload_cloze_file(self):
         self.file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
         if self.file_path:
@@ -209,28 +185,29 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path("Cloze", "cloze")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"Cloze .apkg generated at: {output_path}")
-        
+
     def merge_cloze_files(self):
+        self.merge_files("Cloze", ClozeProcessor, "cloze")
+
+    def merge_files(self, folder_name, processor_class, base_name):
         file_paths = filedialog.askopenfilenames(filetypes=[("Text Files", "*.txt")])
         if not file_paths:
             messagebox.showerror("Error", "No files selected for merging.")
             return
 
-        merged_cloze_notes = []
+        merged_notes = []
         for file_path in file_paths:
-            processor = ClozeProcessor(file_path)
+            processor = processor_class(file_path)
             processor.parse_file()
-            merged_cloze_notes.extend(processor.cloze_notes)
+            merged_notes.extend(getattr(processor, base_name))
 
-        # Ensure we use the ClozeProcessor for creating the merged file
-        processor = ClozeProcessor("")  # Dummy file path, as we only use the `generate_apkg` method
-        processor.cloze_notes = merged_cloze_notes
+        processor = processor_class("")
+        setattr(processor, base_name, merged_notes)
 
-        output_path = self.get_unique_file_path("Cloze", "merged_cloze")
+        output_path = self.get_unique_file_path(folder_name, f"merged_{base_name}")
         processor.generate_apkg(output_path)
+        messagebox.showinfo("Success", f"Merged {folder_name} .apkg generated at: {output_path}")
 
-        messagebox.showinfo("Success", f"Merged Cloze .apkg generated at: {output_path}")
-    
 
 if __name__ == "__main__":
     root = tk.Tk()
