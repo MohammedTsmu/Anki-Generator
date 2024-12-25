@@ -1,0 +1,26 @@
+Generate multiple-choice questions in the following format:
+
+Each question includes:
+Question: followed by the question text (do not number the questions).
+Four options labeled:
+Option A:, Option B:, Option C:, Option D:.
+Correct Option: followed by the correct answer's letter (A, B, C, or D).
+Separate each question with a blank line.
+Do not include numbering, introductory text, or additional labels. Here’s an example:
+
+Question: Which is a loop diuretic?
+Option A: Furosemide
+Option B: Spironolactone
+Option C: Thiazide
+Option D: Acetazolamide
+Correct Option: A
+
+Question: What is the mechanism of action of thiazide diuretics?
+Option A: Inhibits Na+/K+/2Cl- transporter
+Option B: Blocks aldosterone receptors
+Option C: Inhibits Na+/Cl- transporter in the distal tubule
+Option D: Increases osmotic pressure in the renal tubules
+Correct Option: C
+
+Generate 10 multiple-choice questions based on the topic: [insert topic here]. Provide the result as a downloadable .txt file ready to upload into an Anki generator application."
+
