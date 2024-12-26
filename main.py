@@ -80,8 +80,11 @@ class AnkiGeneratorApp:
         # Create a popup window
         prompt_window = tk.Toplevel(self.root)
         prompt_window.title("View Prompt")
-        prompt_window.geometry("500x500")
+        # prompt_window.geometry("500x500")
+        prompt_window.geometry("700x600")
         prompt_window.resizable(False, False)
+        self.root.state('zoomed')
+
 
         # Add a text widget to display the prompt
         text_widget = tk.Text(prompt_window, wrap="word", font=("Arial", 12), bg="#3a3a3a", fg="#ffffff")
