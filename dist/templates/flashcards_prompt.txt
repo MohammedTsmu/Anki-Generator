@@ -1,0 +1,19 @@
+Generate flashcards in the following format:
+
+Each flashcard includes:
+Question: followed by the question text.
+Answer: followed by the answer text.
+Separate each flashcard with a blank line.
+Do not include numbering, introductory text, or additional labels. Here’s an example:
+
+Question: What is the mechanism of action of loop diuretics?
+Answer: They inhibit the Na+/K+/2Cl- cotransporter in the thick ascending limb of the loop of Henle.
+
+Question: Name an example of a potassium-sparing diuretic.
+Answer: Spironolactone.
+
+Question: What is the primary indication for thiazide diuretics?
+Answer: Hypertension.
+
+Generate 10 flashcards based on the topic: [insert topic here, e.g., pharmacology]. Provide the result as a downloadable .txt file ready to upload into an Anki generator application."
+

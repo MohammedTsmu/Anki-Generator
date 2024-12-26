@@ -1,0 +1,19 @@
+Generate vocabulary terms with translations in the following format:
+
+Each term includes:
+Term: followed by the term in English.
+Translation: followed by the translation in [insert target language, e.g., Arabic].
+Separate each term with a blank line.
+Do not include numbering, introductory text, or additional labels. Here’s an example:
+
+Term: Diuretics
+Translation: مدرات البول
+
+Term: Antihypertensives
+Translation: أدوية خفض ضغط الدم
+
+Term: Beta blockers
+Translation: حاصرات بيتا
+
+Generate 10 vocabulary terms with translations based on the topic: [insert topic here]. Provide the result as a downloadable .txt file ready to upload into an Anki generator application."
+

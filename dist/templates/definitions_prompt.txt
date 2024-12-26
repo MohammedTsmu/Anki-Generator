@@ -1,0 +1,19 @@
+Generate definitions for terms in the following format:
+
+Each term includes:
+Term: followed by the term name.
+Definition: followed by the definition text.
+Separate each term with a blank line.
+Do not include numbering, introductory text, or additional labels. Here’s an example:
+
+Term: Diuretics
+Definition: Drugs that increase urine production to manage fluid retention.
+
+Term: ACE inhibitors
+Definition: A class of drugs that relax blood vessels and reduce blood pressure.
+
+Term: Beta blockers
+Definition: Medications that reduce blood pressure by blocking the effects of adrenaline on beta receptors.
+
+Generate 10 definitions based on the topic: [insert topic here]. Provide the result as a downloadable .txt file ready to upload into an Anki generator application."
+
