@@ -14,8 +14,7 @@ class AnkiGeneratorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Anki Generator App")
-        self.root.geometry("650x750")  # Increased dimensions for better layout
-        self.root.resizable(True, True)
+        self.root.state('zoomed')  # Open in maximized state
 
         self.base_output_dir = "output/generated_files"
         os.makedirs(self.base_output_dir, exist_ok=True)
@@ -36,13 +35,13 @@ class AnkiGeneratorApp:
             padding=6,
             relief="flat",
         )
-        self.style.map("TButton", background=[("active", "#5e5e5e")], foreground=[("active", "Green")])
+        self.style.map("TButton", background=[("active", "#5e5e5e")], foreground=[("active", "DarkGreen")])
 
     def create_main_layout(self):
         """Create the main layout with sections."""
         # Create a main frame
         main_frame = ttk.Frame(self.root, padding=20)
-        main_frame.pack(fill="both", expand=True)
+        main_frame.pack(side="left", fill="both", expand=True)
 
         # Add sections
         self.add_section(main_frame, "Flashcards", self.upload_flashcards_file, self.generate_flashcards, self.merge_flashcards_files, "templates/flashcards_prompt.txt")
@@ -50,6 +49,9 @@ class AnkiGeneratorApp:
         self.add_section(main_frame, "Vocabulary", self.upload_vocabulary_file, self.generate_vocabulary, self.merge_vocabulary_files, "templates/vocabulary_prompt.txt")
         self.add_section(main_frame, "Definitions", self.upload_definitions_file, self.generate_definitions, self.merge_definitions_files, "templates/definitions_prompt.txt")
         self.add_section(main_frame, "Cloze Notes", self.upload_cloze_file, self.generate_cloze, self.merge_cloze_files, "templates/cloze_prompt.txt")
+
+        # Add preview section
+        self.create_preview_section()
 
     def add_section(self, parent, section_title, upload_cmd, generate_cmd, merge_cmd, prompt_file_path):
         """Add a section with upload, generate, merge buttons, and view prompt."""
@@ -78,8 +80,7 @@ class AnkiGeneratorApp:
         # Create a popup window
         prompt_window = tk.Toplevel(self.root)
         prompt_window.title("View Prompt")
-        # prompt_window.geometry("500x500")
-        prompt_window.geometry("650x600")
+        prompt_window.geometry("500x500")
         prompt_window.resizable(False, False)
 
         # Add a text widget to display the prompt
@@ -91,7 +92,7 @@ class AnkiGeneratorApp:
         # Add buttons for copying and toggling edit mode
         button_frame = ttk.Frame(prompt_window)
         button_frame.pack(fill="x", pady=10)
-        
+
         def toggle_edit_mode():
             if text_widget.cget("state") == "normal":
                 text_widget.configure(state="disabled")  # Make read-only
@@ -107,6 +108,56 @@ class AnkiGeneratorApp:
         self.root.clipboard_append(text)
         self.root.update()  # Ensure the clipboard is updated
         messagebox.showinfo("Copied", "Prompt copied to clipboard!")
+
+    def create_preview_section(self):
+        """Add a preview section for exploring generated files."""
+        frame = ttk.Frame(self.root, padding=10)
+        frame.pack(side="right", fill="y", pady=20, expand=False)
+
+        ttk.Label(frame, text="Generated Files", font=("Arial", 16, "bold")).pack(anchor="w", pady=5)
+
+        self.file_listbox = tk.Listbox(frame, height=30, width=60, font=("Arial", 12), bg="#3a3a3a", fg="#ffffff", selectbackground="#5e5e5e")
+        self.file_listbox.pack(fill="both", expand=True, padx=10, pady=5)
+
+        button_frame = ttk.Frame(frame)
+        button_frame.pack(fill="x", pady=10)
+
+        ttk.Button(button_frame, text="Refresh List", command=self.refresh_file_list).pack(side="left", padx=10)
+        ttk.Button(button_frame, text="Open Selected", command=self.open_selected_file).pack(side="left", padx=10)
+        ttk.Button(button_frame, text="Open File Folder", command=self.open_file_folder).pack(side="left", padx=10)
+
+        self.refresh_file_list()
+
+    def refresh_file_list(self):
+        """Refresh the list of generated files."""
+        self.file_listbox.delete(0, tk.END)  # Clear the listbox
+        for root, _, files in os.walk(self.base_output_dir):
+            for file in files:
+                if file.endswith(".apkg"):
+                    self.file_listbox.insert(tk.END, os.path.relpath(os.path.join(root, file), self.base_output_dir))
+
+    def open_selected_file(self):
+        """Open the selected file in the system's default application."""
+        selected = self.file_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No file selected!")
+            return
+
+        file_name = self.file_listbox.get(selected[0])
+        file_path = os.path.join(self.base_output_dir, file_name)
+        os.startfile(file_path)  # Open file using the default application
+
+    def open_file_folder(self):
+        """Open the folder containing the selected file."""
+        selected = self.file_listbox.curselection()
+        if not selected:
+            messagebox.showerror("Error", "No file selected!")
+            return
+
+        file_name = self.file_listbox.get(selected[0])
+        file_path = os.path.join(self.base_output_dir, file_name)
+        folder_path = os.path.dirname(file_path)
+        os.startfile(folder_path)  # Open the folder in file explorer
 
     def get_unique_file_path(self, folder_name, base_name):
         folder_path = os.path.join(self.base_output_dir, folder_name)
@@ -130,6 +181,7 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path("Flashcards", "flashcards")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"Flashcards .apkg generated at: {output_path}")
+        self.refresh_file_list()
 
     def merge_flashcards_files(self):
         self.merge_files("Flashcards", FlashcardsProcessor, "flashcards")
@@ -149,6 +201,7 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path("MCQs", "mcqs")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"MCQs .apkg generated at: {output_path}")
+        self.refresh_file_list()
 
     def merge_mcqs_files(self):
         self.merge_files("MCQs", MCQsProcessor, "mcqs")
@@ -168,6 +221,7 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path("Vocabulary", "vocabulary")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"Vocabulary .apkg generated at: {output_path}")
+        self.refresh_file_list()
 
     def merge_vocabulary_files(self):
         self.merge_files("Vocabulary", VocabularyProcessor, "vocabulary")
@@ -187,6 +241,7 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path("Definitions", "definitions")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"Definitions .apkg generated at: {output_path}")
+        self.refresh_file_list()
 
     def merge_definitions_files(self):
         self.merge_files("Definitions", DefinitionsProcessor, "definitions")
@@ -206,6 +261,7 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path("Cloze", "cloze")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"Cloze .apkg generated at: {output_path}")
+        self.refresh_file_list()
 
     def merge_cloze_files(self):
         self.merge_files("Cloze", ClozeProcessor, "cloze")
@@ -228,6 +284,7 @@ class AnkiGeneratorApp:
         output_path = self.get_unique_file_path(folder_name, f"merged_{base_name}")
         processor.generate_apkg(output_path)
         messagebox.showinfo("Success", f"Merged {folder_name} .apkg generated at: {output_path}")
+        self.refresh_file_list()
 
 
 if __name__ == "__main__":
